@@ -1,0 +1,37 @@
+// stepping-stone simulation of an abundant center with asymmetric migration towards the center - "center_asym"
+initialize() {
+	initializeTreeSeq();
+	initializeMutationRate(0);
+	initializeMutationType("m1", 0.5, "f", 0.0);
+	initializeGenomicElementType("g1", m1, 1.0);
+	initializeGenomicElement(g1, 0, 1e7-1);
+	initializeRecombinationRate(1e-8);
+}
+
+// create a population of 500 individuals
+1 early() {
+	sim.addSubpop("p1", 100);
+	sim.addSubpop("p2", 200);
+	sim.addSubpop("p3", 300);
+	sim.addSubpop("p4", 400);
+	sim.addSubpop("p5", 500);
+	sim.addSubpop("p6", 500);
+	sim.addSubpop("p7", 400);
+	sim.addSubpop("p8", 300);
+	sim.addSubpop("p9", 200);
+	sim.addSubpop("p10", 100);
+	p1.setMigrationRates(p2, 0.05);
+	p2.setMigrationRates(c(p1, p3), c(0.1, 0.05));
+	p3.setMigrationRates(c(p2, p4), c(0.1, 0.05));
+	p4.setMigrationRates(c(p3, p5), c(0.1, 0.05));
+	p5.setMigrationRates(c(p4, p6), c(0.1, 0.05));
+	p6.setMigrationRates(c(p5, p7), c(0.05, 0.1));
+	p7.setMigrationRates(c(p6, p8), c(0.05, 0.1));
+	p8.setMigrationRates(c(p7, p9), c(0.05, 0.1));
+	p9.setMigrationRates(c(p8, p10), c(0.05, 0.1));
+	p10.setMigrationRates(p9, 0.05);
+}
+
+// output samples of 10 genomes periodically, all fixed mutations at end
+50000 late(){
+sim.treeSeqOutput("ss_center_asym.trees");}
