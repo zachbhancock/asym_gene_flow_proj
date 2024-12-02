@@ -1,5 +1,3 @@
-######R code for shovel-bug project######
-
 #import
 library(ggplot2)
 library(ggpubr)
@@ -61,10 +59,10 @@ results <- run.regions(region=region, pop=pop, psi=psi, exclude.ocean=F)
 #pca, panel B
 pca.plot <- ggplot(data, aes(x=PC1, y=PC2, color=latitude)) + geom_point(size=5) + theme_bw() + xlab("PC1") + 
   ylab("PC2") + scale_color_viridis() + theme(axis.title=element_text(size=16),
-                                                                       axis.text=element_text(size=14),
-                                                                       legend.position="top", 
-                                                                       legend.title=element_text(size=14),
-                                                                       legend.text=element_text(size=12)) +
+                                              axis.text=element_text(size=14),
+                                              legend.position="top", 
+                                              legend.title=element_text(size=14),
+                                              legend.text=element_text(size=12)) +
   labs(color="latitude")
 
 #fst, panel C
@@ -127,6 +125,56 @@ ggarrange(fig1_map, fig1bc)
 
 #make figure 2, main text
 
+feems_node_pos <- read_csv('feems_node_pos.csv', col_names=c('lon', 'lat'), col_types='dd')
+locs <- read.table("haust_locations.coord", header=FALSE)
+usa <- map_data("state")
+
+NAmap <- ggplot() + geom_polygon(data = usa, 
+                                 aes(x=long, y = lat, group = group), 
+                                 fill = "white", 
+                                 color="black") +
+  coord_fixed(xlim = c(-85, -65),  ylim = c(25, 48), ratio =1.2)
+
+#produces map with feems and conStruct results
+
+feems.plot <- NAmap + geom_segment(mapping=aes(x=lon1, xend=lon2, y=lat1, yend=lat2, color=w), data=feems.edges,
+                                   linewidth=1) +
+  scale_color_gradientn(colors=feems.colors, name="log10(w)") +
+  theme_bw() + xlab("Longitude") + ylab("Latitude") + theme(axis.text=element_text(size=12), axis.title=element_text(size=14))
+
+load(sprintf("shovelbugs_K2_conStruct.results.Robj"))
+load(sprintf("shovelbugs_K2_data.block.Robj"))
+tmp <- conStruct.results$chain_2$MAP$admix.proportions
+tmp.df <- as.data.frame(tmp)
+names(tmp.df) <- c("layer_1", "layer_2")
+coords_new.df <- as.data.frame(coords_new)
+names(coords_new.df) <- c("long", "lat")
+admix.df <- cbind(tmp.df, coords_new.df)
+write.table(admix.df, file="coords_new.txt")
+admix.layers <- read.table("layer_contributions.txt", header=TRUE)
+pie.df <- data.frame(long = admix.layers$long, lat = admix.layers$lat)
+pie.df$pop <- admix.layers$pop
+pie.df$A <- admix.layers$layer_1
+pie.df$B <- admix.layers$layer_2
+
+feems.construct.plot <- feems.plot + geom_scatterpie(aes(x=long, y=lat, group=pop, r=0.4), data = pie.df, cols=LETTERS[1:2],
+                                                     legend_name = "layer") + geom_label(data=)
+
+admix.df <- read.table("coords_new_layers.txt", header=TRUE)
+data_long <- gather(admix.df, layers, contribution, layer_1, layer_2, factor_key=TRUE)
+data_long$sample <- factor(data_long$sample, levels = unique(data_long$sample))
+ggplot(data=data_long, aes(x=sample, y=contribution, fill=layers)) + geom_bar(stat="identity") + coord_flip() + theme_bw() +
+  theme(axis.title.y=element_blank(),
+        #axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.text.x=element_text(size=14),
+        axis.title.x=element_blank(),
+        legend.position="none")
+
+ggarrange(struct.plot, feems.construct.plot, labels=c("A", "B"), widths=c(1,2.5))
+
+#make figure 3, main text
+
 a <- ggplot(data, aes(x=latitude, y=pi, color=latitude)) + geom_smooth(span=1, fill="lightgray") +
   geom_point(size=4) + scale_color_viridis() +
   xlab("latitude") + ylab(expression(pi)) + theme_bw() + theme(axis.title=element_text(size=14),
@@ -136,10 +184,10 @@ b <- ggplot(data, aes(x=center.dist, y=F, color=latitude)) + geom_smooth(method=
   geom_point(size=4) + scale_color_viridis() +
   xlab("distance from center (mi)") + ylab("inbreeding coefficient (F)") + theme_bw() + theme(axis.title=element_text(size=14),
                                                                                               axis.text=element_text(size=12))
-#final figure 2, main text
+#final figure 3, main text
 ggarrange(a,b, common.legend=TRUE)
 
-#make figure 3, main text
+#make figure 4, main text
 
 psi.results$model <- "empirical"
 empirical <- ggplot(psi.results, aes(x=latitude, y=psi, fill=het)) + theme_bw() +
@@ -159,7 +207,7 @@ psi.sim.plot <- ggplot(sim.psi, aes(x=population, y=psi.sum, fill=het)) + geom_p
   ylab(expression(sum(psi[ij]))) + scale_x_continuous(breaks=seq(1, 10, by=1)) +
   geom_hline(yintercept=0, linetype="dashed") + facet_wrap(~model)
 
-#final figure 3, main text
+#final figure 4, main text
 ggarrange(empirical, psi.sim.plot, labels=c("A", "B"), font.label=list(size=18),
           common.legend=TRUE, legend="right")
 
@@ -206,26 +254,7 @@ fig_s4 <- ggplot(filtered_depth, aes(x=center.dist, y=pi, color=latitude)) + the
         legend.text=element_text(size=12), legend.title=element_text(size=14),
         strip.text=element_text(size=14)) + labs(color="latitude")
 
-#make figure s5
-
-feems_node_pos <- read_csv('feems_node_pos.csv', col_names=c('lon', 'lat'), col_types='dd')
-locs <- read.table("haust_locations.coord", header=FALSE)
-usa <- map_data("state")
-
-NAmap <- ggplot() + geom_polygon(data = usa, 
-                                 aes(x=long, y = lat, group = group), 
-                                 fill = "white", 
-                                 color="black") +
-  coord_fixed(xlim = c(-85, -65),  ylim = c(25, 48), ratio = 1.2)
-
-#produces map with feems results
-
-NAmap + geom_segment(mapping=aes(x=lon1, xend=lon2, y=lat1, yend=lat2, color=w), data=feems.edges,
-                     linewidth=1) +
-  scale_color_gradientn(colors=feems.colors, name="log10(w)") + geom_point(data=locs, aes(x=V1, y=V2), size=4) +
-  theme_bw() + xlab("Longitude") + ylab("Latitude") + theme(axis.text=element_text(size=12), axis.title=element_text(size=14))
-
-#make fig s6
+#make fig s5
 
 center.sym.psi <- read.table("center_sym_size_results.txt", header=TRUE)
 center.sym.psi$pop.size <- factor(center.sym.psi$pop.size, levels=c("5:1", "25:1", "50:1"))
@@ -236,3 +265,5 @@ ggplot(center.sym.psi, aes(x=population, y=psi.sum, fill=het)) + geom_point(size
         legend.title=element_text(size=14), strip.text=element_text(size=14)) +
   ylab(expression(sum(psi[ij]))) + scale_x_continuous(breaks=seq(1, 10, by=1)) +
   geom_hline(yintercept=0, linetype="dashed") + facet_wrap(~pop.size) + ylim(-2,1.5)
+
+##end##
