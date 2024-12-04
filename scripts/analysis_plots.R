@@ -18,7 +18,7 @@ setwd("~/Desktop/ZBH_stuff/shovel-bugs/")
 data <- read.table("shovel_bugs_new_results.txt", header=TRUE)
 fst.dist <- read.table("fst_dist_data.txt", header=TRUE)
 psi.results <- read.table("psi_results.txt", header=TRUE)
-sim.psi <- read.table("sim_results_psi.txt", header=TRUE)
+sim.psi <- read.table("sim_psi_results.txt", header=TRUE)
 snp.file <- "feems_bed.bed"
 coord.file <- "coords_for_psi.txt"
 vcf.data <- read.vcfR("feems_filt.recode.vcf")
