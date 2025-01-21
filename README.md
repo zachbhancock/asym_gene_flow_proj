@@ -5,7 +5,8 @@ ACCESS INFORMATION
 2. Recommended citation for this data/code archive: https://github.com/zachbhancock/asym_gene_flow_proj
 
 DATA & CODE FILE OVERVIEW
-This data repository consist of 12 data files, 13 code scripts, 9 figure files, and this README document, with the following data and code filenames and variables
+This data repository consist of 12 data files, 13 code scripts, 9 figure files, and this README document, with the following data and code filenames and variables.
+
 Data files and variables in data folder
     1. Filtered VCF file (feems_filt.recode.vcf)
     2. BED files (feems_bed.bed, feems_bed.bim, feems_bed.bed)
@@ -16,6 +17,7 @@ Data files and variables in data folder
     7. Empirical psi results (psi_results)
     8. Summary statistics (shovel_bugs_new_results.txt)
     9. Simulated psi results (sim_psi_results.txt)
+
 Code scripts and workflow in script folder
     1. Statistical analysis in R (analysis_plots.R)
     2. SLiM simulation recipes (center_asym.slim, center_sym.slim, equal_asym.slim, equal_sym.slim)
