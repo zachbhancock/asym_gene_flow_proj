@@ -2,7 +2,7 @@
 
 ACCESS INFORMATION
 1. Licenses/restrictions: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication
-2. Recommended citation for this data/code archive: https://github.com/zachbhancock/asym_gene_flow_proj
+2. Recommended citation for this data/code archive: https://github.com/*/asym_gene_flow_proj
 
 DATA & CODE FILE OVERVIEW
 
