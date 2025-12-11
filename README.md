@@ -1,30 +1,44 @@
 # Asymmetric gene flow maintains range edges in a marine invertebrate
 GENERAL INFORMATION
+
 This README.txt file was updated on 12/11/2025. 
+
 A. Paper associated with this archive
+
 Citation: Hancock, ZB, Adams, NE, Wood Jr., PL, Bradburd, GS. Asymmetric gene flow maintains range edges in a marine invertebrate. In review.
+
 Brief abstract
+
 Species are restricted to finite ranges, and when they are in demographic equilibrium with the environment this implies a failure to adapt at the range periphery. There are several competing evolutionary hypotheses for the maintenance and persistence of range edges. One hypothesis is gene swamping of edge populations, in which migrants from the center carrying alleles adapted to the range center but maladaptive along the edge hamper local adaptation. A competing explanation is dispersal limitation, in which reduced migration to the periphery keeps edge populations small, causing drift to dominate over selection. It has proven difficult to assess these potential generative scenarios due to the inherent complexity of species ranges. In this study, we leverage range-wide genomic sequencing data to investigate the evolution of range edges in an empirical system - Haustorius canadensis, the Canadian shovel bug. We find increased genetic drift and inbreeding on the range edges and detect signatures of asymmetric migration towards the range center. The inferred directionality of migration is consistent with the direction of the dominant current regimes in the North Atlantic. We conclude that anisotropic dispersal towards the range center leaves progressively fewer migrants to replenish peripheral populations, consistent with the migration limitation hypothesis, and generates the appearance of an abundant center.  
+
 B. Originators
+
 Zachary B. Hancock - Department of Biological Sciences, Augusta University
 Nicole E. Adams - Department of Ecology & Evolutionary Biology, University of Michigan
 Perry L. Wood, Jr. - Department of Ecology & Evolutionary Biology, University of Michigan
 Gideon S. Bradburd - Department of Ecology & Evolutionary Biology, University of Michigan
+
 C. Contact information
+
 Zachary B. Hancock
 Department of Biological Sciences
 Augusta University
 Augusta, GA 30904
 email: zhancock@augusta.edu
+
 D. Dates of data collection
 May 2023
+
 E. Geographic Location(s) of data collection
 Coordinates for each site can be found in the file "revised_shovel_bug_results.txt"
+
 F. Funding Sources
 Research reported was supported by the National Institute of General Medical Sciences 
 of the National Institutes of Health (NIH) under award R35GM137919 (awarded to 
 GSB).
+
 ACCESS INFORMATION
+
 1. Licenses/restrictions: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication
 2. Recommended citation for this data/code archive: https://github.com/*/asym_gene_flow_proj
 
