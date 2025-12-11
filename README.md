@@ -5,7 +5,7 @@ This README.txt file was updated on 12/11/2025.
 
 A. Paper associated with this archive
 
-Citation: Hancock, ZB, Adams, NE, Wood Jr., PL, Bradburd, GS. Asymmetric gene flow maintains range edges in a marine invertebrate. In review.
+Citation: REDACTED Asymmetric gene flow maintains range edges in a marine invertebrate. In review.
 
 Brief abstract
 
@@ -13,18 +13,11 @@ Species are restricted to finite ranges, and when they are in demographic equili
 
 B. Originators
 
-Zachary B. Hancock - Department of Biological Sciences, Augusta University
-Nicole E. Adams - Department of Ecology & Evolutionary Biology, University of Michigan
-Perry L. Wood, Jr. - Department of Ecology & Evolutionary Biology, University of Michigan
-Gideon S. Bradburd - Department of Ecology & Evolutionary Biology, University of Michigan
+REDACTED
 
 C. Contact information
 
-Zachary B. Hancock
-Department of Biological Sciences
-Augusta University
-Augusta, GA 30904
-email: zhancock@augusta.edu
+REDACTED
 
 D. Dates of data collection
 May 2023
