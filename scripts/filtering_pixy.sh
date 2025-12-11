@@ -3,7 +3,7 @@
 ####vcftools filtering
 #snps only
 
-vcftools --vcf populations.snps.vcf --remove ~/shovel-bugs/lowDP.indv --max-missing 0.75 --max-alleles 2 --minDP 3 --maf 0.05 --min-meanDP 20 --recode --recode-INFO-all --out feems_filt
+vcftools --vcf populations.snps.vcf --remove lowDP.indv --max-missing 0.75 --max-alleles 2 --minDP 3 --maf 0.05 --min-meanDP 20 --recode --recode-INFO-all --out feems_filt
 
 perl -pe 's/^([^#])/scaffold_\1/' feems_filt.recode.vcf > feems_filt.recode.chr.vcf
 
@@ -50,17 +50,3 @@ bcftools view -h final_sorted.vcf.gz > sort.head.txt
 cat sort.head.txt rename2.body.vcf | bgzip > final_merged.vcf.gz
 
 tabix final_merged.vcf.gz
-
-##pixy analysis
-
-pixy --stats fst \
---vcf final_merged.vcf.gz \
---populations new_pop_file.txt \
---window_size 10603559 \
---n_cores 4
-
-pixy --stats pi \
---vcf final_merged.vcf.gz \
---populations new_indv_file.txt \
---window_size 10603559 \
---n_cores 4
