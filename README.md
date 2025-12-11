@@ -76,7 +76,9 @@ Code scripts and workflow in script folder
 8. Filter data for pixy (filtering_pixy.sh)
 
 General Workflow
+
 Results of each analysis have been summarized in data files (e.g., revised_shovel_bug_results.txt) for ease of analysis. Getting the results in these formats requires manual manipulation, but here I will describe how the user can acquire each of these results, after which they can recompile these files if they so choose.
+
 1. I assume the user begins with an unfiltered VCF file produced from STACKS of the raw sequence reads (SRA BioProject can be found here: https://www.ncbi.nlm.nih.gov/bioproject/PRJNA1183394). The full STACKS workflow can be found here (https://catchenlab.life.illinois.edu/stacks/manual/). By default, this file is populations.snps.vcf; filtering_pixy.sh assumes this default name is kept. 
 2. Lines 6-12 of filtering_pixy.sh filter and format the VCF file. It also performs the PCA (VCF2PCACluster). These produce feems_filt.recode.vcf and the PCA values in revised_shovel_bug_results.txt. 
 3. The remaining lines of filtering_pixy.sh prepare the VCF file for pixy analysis, which requires creating a file of invariant and variant sites and then merging them. This requires the tabix package and bcftools. From final_merged.vcf.gz (again, too large of a file to be included in this github), the user can perform the pixy analysis - lines 56-66. The output files will have multiple chromosomes that must be averaged to get pi; see https://pixy.readthedocs.io/en/latest/about.html for instructions.
