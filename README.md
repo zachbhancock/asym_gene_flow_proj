@@ -20,12 +20,15 @@ C. Contact information
 REDACTED
 
 D. Dates of data collection
+
 May 2023
 
 E. Geographic Location(s) of data collection
+
 Coordinates for each site can be found in the file "revised_shovel_bug_results.txt"
 
 F. Funding Sources
+
 Research reported was supported by the National Institute of General Medical Sciences 
 of the National Institutes of Health (NIH) under award R35GM137919 (awarded to 
 GSB).
