@@ -8,7 +8,7 @@ import sys
 import pandas as pd
 import math
 
-ts = tskit.load("ss_center_sym_50_to_1_10.trees")
+ts = tskit.load("ss_center_sym.trees") #load trees from sLiM
 ts = ts.simplify()
 recap_ts = pyslim.recapitate(ts, recombination_rate=1e-8, ancestral_Ne=10000)
 ts = msprime.sim_mutations(recap_ts, rate=1e-7, random_seed=12345)
