@@ -60,7 +60,7 @@ Description: These files are different formats of the same information - specifi
 6. Population locations (new_pop_file.txt)
 Description: Coordinate file for each sample site instead of individuals. 
 7. Empirical psi results (psi_results)
-Description: This file is generated from the rangeExpansion R package. Note that each psi value from be estimated from the data table that is produced, as described in the main text of the manuscript.
+Description: This file is generated from the rangeExpansion R package. Note that each psi value can be estimated from the data table that is produced, as described in the main text of the manuscript.
 8. Summary statistics (revised_shovel_bugs_results.txt)
 Description: This file is a summary of several different analyses. It lists each individual in the first column, the sample site in the second, the clusters they were assigned by the VCF2PCACluster analysis (from filtering_pixy.sh), the first two PC axes from this analysis, coordinate locations, pi (estimated from pixy in filtering_pixy.sh), mean_depth (from vcftools, filtering_pixy.sh), F - inbreeding coefficient (vcftools, filtering_pixy.sh), low_cov_pi (pi estimated in pixy when coverage is normalized), and low_mean_depth (depth of normalized coverage).
 9. Simulated psi results (sim_psi_results.txt, center_sym_size_results.txt)
