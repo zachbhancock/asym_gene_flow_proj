@@ -11,19 +11,19 @@ library(ncdf4)
 library(ggnewscale)
 library(ggimage)
 library(rangeExpansion)
-library(vcfR)
+library(scatterpie)
 
-setwd("C:/Users/zhancock/Desktop/shovel-bugs")
+setwd() #set to directory
 
 #read in data
 data <- read.table("revised_shovel_bug_results.txt", header=TRUE)
-fst.dist <- read.table("data/fst_dist_data.txt", header=TRUE)
-psi.results <- read.table("data/psi_results.txt", header=TRUE)
-sim.psi <- read.table("data/sim_psi_results.txt", header=TRUE)
-snp.file <- "data/feems_bed.bed"
-coord.file <- "data/coords_for_psi.txt"
-vcf.data <- read.vcfR("data/feems_filt.recode.vcf")
-pop.map <- read.table("data/new_pop_file.txt", header=TRUE) #must have header "id" and "pop"
+fst.dist <- read.table("fst_dist_data.txt", header=TRUE)
+psi.results <- read.table("psi_results.txt", header=TRUE)
+sim.psi <- read.table("sim_psi_results.txt", header=TRUE)
+snp.file <- "feems_bed.bed"
+coord.file <- "coords_for_psi.txt"
+vcf.data <- read.vcfR("feems_filt.recode.vcf")
+pop.map <- read.table("new_pop_file.txt", header=TRUE) #must have header "id" and "pop"
 
 #get distance from the center in miles
 data$center.dist <- 69*(abs(36 - data$latitude))
@@ -82,30 +82,6 @@ fst.plot <- ggplot(fst.dist, aes(x=geo.dist, y=fst_df, color=comparison, shape=c
                      legend.position="top", axis.text.x = element_text(hjust = 1)) + xlab("geographic distance (mi)") +
   ylab(expression(F[ST]/(1-F[ST]))) + scale_color_manual(values = c("#E69F00", "#CC79A7", "#0072B2"))
 
-#map with shovel-bug imagine, panel A
-
-#nc_open("sws_baseline_2000_2019_depthsurf_2e98_ab53_db03_U1720468843697.nc")
-#sws_mean <- brick("sws_baseline_2000_2019_depthsurf_2e98_ab53_db03_U1720468843697.nc", varname="sws_mean")
-#NA_ex <- extent(-83, -68, 25, 45)
-#NA_sws <- crop(sws_mean, NA_ex)
-#test_spdf <- as(NA_sws, "SpatialPixelsDataFrame")
-#test_df <- as.data.frame(test_spdf)
-#colnames(test_df) <- c("value", "x", "y")
-#x_range <- range(test_df$x)
-#y_range <- range(test_df$y)
-#
-#bare.map.plot <-  ggplot() +
-#  geom_tile(data=test_df, aes(x=x, y=y), alpha=0.8) +
-#  xlab("longitude") + ylab("latitude") +
-#  coord_equal() + theme_bw() +
-#  scale_x_continuous(limits = x_range, expand = c(0, 0)) +
-#  scale_y_continuous(limits = y_range, expand = c(0, 0)) +
-#  theme(panel.background = element_rect(fill="lightgray"),
-#        panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-#        axis.title=element_text(size=16), axis.text=element_text(size=14), 
-#        legend.position="top", legend.title=element_text(size=14), 
-#        legend.text=element_text(size=12))
-
 usa <- map_data("state")
 
 NAmap <- ggplot() + geom_polygon(data = usa, 
@@ -144,6 +120,19 @@ ggsave("revised_fig1.png", plot = fig1, dpi = 300, bg = "white")
 
 #make figure 2, main text
 
+feems_nodes <- read_csv('feems_nodes_revise.csv', col_names='node_id', col_types='i')
+feems_node_pos <- read_csv('feems_node_pos_revise.csv', col_names=c('lon', 'lat'), col_types='dd')
+feems_edges <- read_csv('feems_edges_revise.csv', col_names=c('n1', 'n2'), col_types='ii')
+feems_w <- read_csv('feems_w_revise.csv', col_names='w', col_types='d')
+
+nodes <- add_column(feems_nodes, feems_node_pos)
+edges <- add_column(feems_edges, feems_w)
+
+edges_n1 <- left_join(edges, nodes, by=c('n1' = 'node_id'))
+edges_n2 <- left_join(edges_n1, nodes, by=c('n2' = 'node_id'))
+feems.edges <- dplyr::select(edges_n2, lon1=lon.x, lat1=lat.x, lon2=lon.y, lat2=lat.y, w)
+feems.mid.w = ((max(feems.edges$w) - min(feems.edges$w)) / 2) + min(feems.edges$w)
+rm(feems_nodes, feems_node_pos, feems_edges, feems_w, nodes, edges, edges_n1, edges_n2)
 feems_node_pos <- read_csv('feems_node_pos.csv', col_names=c('lon', 'lat'), col_types='dd')
 locs <- read.table("haust_locations.coord", header=FALSE)
 usa <- map_data("state")
@@ -157,9 +146,9 @@ NAmap <- ggplot() + geom_polygon(data = usa,
 #produces map with feems and conStruct results
 
 feems.plot <- NAmap + geom_segment(mapping=aes(x=lon1, xend=lon2, y=lat1, yend=lat2, color=w), data=feems.edges,
-                                   linewidth=1) +
-  scale_color_gradientn(colors=feems.colors, name="log10(w)") +
-  theme_bw() + xlab("Longitude") + ylab("Latitude") + theme(axis.text=element_text(size=12), axis.title=element_text(size=14))
+                                   linewidth=1.15) +
+  scale_color_viridis(option="magma") +
+  theme_bw() + xlab("longitude") + ylab("latitude") + theme(axis.text=element_text(size=12), axis.title=element_text(size=14))
 
 load(sprintf("shovelbugs_K2_conStruct.results.Robj"))
 load(sprintf("shovelbugs_K2_data.block.Robj"))
@@ -169,28 +158,29 @@ names(tmp.df) <- c("layer_1", "layer_2")
 coords_new.df <- as.data.frame(coords_new)
 names(coords_new.df) <- c("long", "lat")
 admix.df <- cbind(tmp.df, coords_new.df)
-write.table(admix.df, file="coords_new.txt")
 admix.layers <- read.table("layer_contributions.txt", header=TRUE)
 pie.df <- data.frame(long = admix.layers$long, lat = admix.layers$lat)
 pie.df$pop <- admix.layers$pop
 pie.df$A <- admix.layers$layer_1
 pie.df$B <- admix.layers$layer_2
+pie.colors <- c("#E69F00", "#0072B2")
 
 feems.construct.plot <- feems.plot + geom_scatterpie(aes(x=long, y=lat, group=pop, r=0.4), data = pie.df, cols=LETTERS[1:2],
-                                                     legend_name = "layer") + geom_label(data=)
+                                                     legend_name = "layer") + scale_fill_manual(values=pie.colors) + geom_label(data=)
 
 admix.df <- read.table("coords_new_layers.txt", header=TRUE)
 data_long <- gather(admix.df, layers, contribution, layer_1, layer_2, factor_key=TRUE)
 data_long$sample <- factor(data_long$sample, levels = unique(data_long$sample))
-ggplot(data=data_long, aes(x=sample, y=contribution, fill=layers)) + geom_bar(stat="identity") + coord_flip() + theme_bw() +
+struct.plot <- ggplot(data=data_long, aes(x=sample, y=contribution, fill=layers)) + scale_fill_manual(values=pie.colors) + geom_bar(stat="identity") + coord_flip() + theme_bw() +
   theme(axis.title.y=element_blank(),
-        #axis.text.y=element_blank(),
+        axis.text.y=element_blank(),
         axis.ticks.y=element_blank(),
         axis.text.x=element_text(size=14),
         axis.title.x=element_blank(),
         legend.position="none")
 
-ggarrange(struct.plot, feems.construct.plot, labels=c("A", "B"), widths=c(1,2.5))
+fig2 <- ggarrange(struct.plot, feems.construct.plot, widths=c(1,2.5))
+ggsave("revised_fig2.png", plot = fig2, dpi = 300, bg = "white")
 
 #make figure 3, main text
 
@@ -238,7 +228,7 @@ ggsave("revised_fig4.png", plot = fig4, dpi=300, bg = "white")
 
 fig_s1a <- ggplot(filtered_depth, aes(x=mean_depth, y=pi, color=latitude)) + theme_bw() + geom_smooth(method="lm") +
   geom_point(size=8) + scale_color_viridis() +
-  ylab(expression(pi)) + xlab("mean depth") +
+  ylab(expression("individual heterozygosity "(pi))) + xlab("mean depth") +
   theme(axis.title=element_text(size=16), axis.text=element_text(size=14), 
         legend.text=element_text(size=12), legend.title=element_text(size=14),
         strip.text=element_text(size=14)) + labs(color="latitude")
@@ -250,7 +240,8 @@ fig_s1b <- ggplot(filtered_depth, aes(x=center.dist, y=mean_depth, color=latitud
         legend.text=element_text(size=12), legend.title=element_text(size=14),
         strip.text=element_text(size=14)) + labs(color="latitude")
 
-ggarrange(fig_s1a, fig_s1b, labels=c("A", "B"), common.legend=TRUE)
+fig_s1 <- ggarrange(fig_s1a, fig_s1b, labels=c("A", "B"), common.legend=TRUE)
+ggsave("fig_s1.png", plot = fig4, dpi=300, bg = "white")
 
 #figure s2
 
@@ -281,7 +272,8 @@ cols <- c("#af8dc3", "#7fbf7b", "#bababa", "#878787", "#762a83", "#1b7837", "ali
           "green", "yellow", "skyblue", "pink", "orange", "brown", "lightblue", "dodgerblue", "darkred")
 
 #fig S4, supp mat
-triangle.plot(hi.het, colors = cols, cex=5)
+fig_s4 <- triangle.plot(hi.het, colors = cols, cex=5)
+ggsave("fig_s4.png", plot=fig_s4, dpi = 300)
 
 #make figure s5
 
@@ -311,11 +303,13 @@ ggsave("fig_s6.png", plot=fig_s6, dpi=300)
 center.sym.psi <- read.table("center_sym_size_results.txt", header=TRUE)
 center.sym.psi$pop.size <- factor(center.sym.psi$pop.size, levels=c("5:1", "25:1", "50:1"))
 
-ggplot(center.sym.psi, aes(x=population, y=psi.sum, fill=het)) + geom_point(size=8, shape=21) +
+fig_s7 <- ggplot(center.sym.psi, aes(x=population, y=psi.sum, fill=het)) + geom_point(size=5, shape=21) +
   theme_bw() + scale_fill_viridis(option="magma", name=expression(pi)) + 
   theme(axis.title=element_text(size=16), axis.text=element_text(size=14), legend.text=element_text(size=12),
         legend.title=element_text(size=14), strip.text=element_text(size=14)) +
   ylab(expression(sum(psi[ij]))) + scale_x_continuous(breaks=seq(1, 10, by=1)) +
   geom_hline(yintercept=0, linetype="dashed") + facet_wrap(~pop.size) + ylim(-2,1.5)
+
+ggsave("fig_s7.png", plot=fig_s7, dpi=300)
 
 ##end##
