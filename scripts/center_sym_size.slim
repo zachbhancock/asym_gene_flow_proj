@@ -32,6 +32,6 @@ initialize() {
 	p10.setMigrationRates(p9, 0.05);
 }
 
-// output samples of 10 genomes periodically, all fixed mutations at end; ; replicates are made by adding "_n" to the file name with n being the replicate number
+// output samples of 10 genomes periodically, all fixed mutations at end; ; alter "_n" to represent the tested ratio
 100000 late(){
-sim.treeSeqOutput("ss_center_sym_25_to_1.trees");}
+sim.treeSeqOutput("ss_center_sym_n_to_1.trees");}
