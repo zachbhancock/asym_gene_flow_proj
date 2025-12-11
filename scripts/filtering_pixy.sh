@@ -50,3 +50,17 @@ bcftools view -h final_sorted.vcf.gz > sort.head.txt
 cat sort.head.txt rename2.body.vcf | bgzip > final_merged.vcf.gz
 
 tabix final_merged.vcf.gz
+
+##pixy analysis
+
+pixy --stats fst \
+--vcf final_merged.vcf.gz \
+--populations new_pop_file.txt \
+--window_size 10603559 \
+--n_cores 4
+
+pixy --stats pi \
+--vcf final_merged.vcf.gz \
+--populations new_indv_file.txt \
+--window_size 10603559 \
+--n_cores 4
