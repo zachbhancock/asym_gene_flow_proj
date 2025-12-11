@@ -65,17 +65,17 @@ for i in ind_ids:
 
 b = np.reshape(ind_div, (50,50))
 panda_df = pd.DataFrame(data = b, columns = x)
-panda_df.to_csv("ss_center_sym_50_to_1_10-pi.csv", sep=' ', index=True)
+panda_df.to_csv("ss_center_sym-pi.csv", sep=' ', index=True)
 
 ind_Fst = ts.Fst(ind_nodes, indexes=pairs)
 
 c = np.reshape(ind_Fst, (50,50))
 panda2_df = pd.DataFrame(data = c, columns = x)
-panda2_df.to_csv("ss_center_sym_50_to_1_10-Fst.csv", sep=" ", index=True)
+panda2_df.to_csv("ss_center_sym-Fst.csv", sep=" ", index=True)
 
 indivlist = []
 indivnames = []
-with open("ss_center_sym_50_to_1_10.txt", "w") as indfile:
+with open("ss_center_sym.txt", "w") as indfile:
   indfile.writelines("\t".join(["vcf_label"]
                                + ["x", "y"]) + "\n")
   for group in group_order:
@@ -88,6 +88,6 @@ with open("ss_center_sym_50_to_1_10.txt", "w") as indfile:
                 str(ind.location[0]), str(ind.location[1])]
         indfile.writelines("\t".join(data) + "\n")
 
-with open("ss_center_sym_50_to_1_10.vcf", "w") as vcffile:
+with open("ss_center_sym.vcf", "w") as vcffile:
    ts.write_vcf(vcffile, individuals=indivlist, individual_names=indivnames)
 
