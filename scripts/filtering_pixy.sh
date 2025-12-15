@@ -7,8 +7,10 @@ vcftools --vcf populations.snps.vcf --remove lowDP.indv --max-missing 0.75 --max
 
 perl -pe 's/^([^#])/scaffold_\1/' feems_filt.recode.vcf > feems_filt.recode.chr.vcf
 
+#make BED files
 plink --vcf feems_filt.recode.chr.vcf --make-bed --out feems_bed --allow-extra-chr
 
+#run PCA
 VCF2PCACluster -InVCF feems_filt.recode.vcf -OutPut pca_feems -InSampleGroup ~/shovel-bugs/new_pop_file.txt 
 
 #invariant + variant file for pixy
